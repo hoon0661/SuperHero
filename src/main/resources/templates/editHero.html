@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <script src="https://use.fontawesome.com/77ab717e9d.js"></script>
+    <title>Superhero Sightings</title>
+  </head>
+
+  <body>
+    <!-- Main Body of Page -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/heroes"
+              >Hero <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/organizations">Organization</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/locations">Location</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/sightings">Sighting</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Search
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/heroesByLocation"
+                >Hero(es) By Location</a
+              >
+              <a class="dropdown-item" href="/locationsByHero"
+                >Location(s) By Hero</a
+              >
+              <a class="dropdown-item" href="/sightingsByDate"
+                >Sighting(s) By Date</a
+              >
+              <a class="dropdown-item" href="/heroesByOrganization"
+                >Hero(es) By Organization</a
+              >
+              <a class="dropdown-item" href="/organizationsByHero"
+                >Organization(s) By Hero</a
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row m-4">
+        <div class="col text-center border border-dark">
+          <h1><a href="/" class="text-dark">Hero Manager</a></h1>
+        </div>
+      </div>
+
+      <div class="row m-4 border border-dark">
+        <div class="col-3 text-center m-3">
+          <span class="h3">Edit Hero</span>
+        </div>
+        <div class="col-7 text-center m-3">
+          <form action="editHero" method="POST">
+            <div class="form-group row">
+              <label for="name" class="col-3 col-form-label"> Name </label>
+              <div class="col-9">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  th:value="${hero.name}"
+                />
+                <div th:if="${#fields.hasErrors('hero.name')}">
+                  <p
+                    th:each="error : ${#fields.errors('hero.name')}"
+                    class="alert alert-danger"
+                    th:text="${error}"
+                  >
+                    Bad name
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="name" class="col-3 col-form-label"> Hero Type </label>
+              <div class="col-9">
+                <select
+                  name="heroType"
+                  id="heroTypeId"
+                  class="form-control"
+                  th:value="${hero.heroType}"
+                >
+                  <option value="" selected hidden>--Select--</option>
+                  <option value="Super Hero">Super Hero</option>
+                  <option value="Super Villain">Super Villain</option>
+                </select>
+                <div th:if="${#fields.hasErrors('hero.heroType')}">
+                  <p
+                    th:each="error : ${#fields.errors('hero.heroType')}"
+                    class="alert alert-danger"
+                    th:text="${error}"
+                  >
+                    Bad name
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="superPower" class="col-3 col-form-label">
+                Super Power
+              </label>
+              <div class="col-9">
+                <input
+                  type="text"
+                  name="superPower"
+                  id="superPower"
+                  class="form-control"
+                  th:value="${hero.superPower}"
+                />
+                <div th:if="${#fields.hasErrors('hero.superPower')}">
+                  <p
+                    th:each="error : ${#fields.errors('hero.superPower')}"
+                    class="alert alert-danger"
+                    th:text="${error}"
+                  >
+                    Bad name
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="organizations" class="col-3 col-from-label">
+                Organizations
+              </label>
+              <div class="col-9">
+                <select
+                  multiple
+                  name="organizationId"
+                  id="organizations"
+                  class="form-control"
+                >
+                  <option
+                    th:each="organization : ${organizations}"
+                    th:value="${organization.id}"
+                    th:text="${organization.name}"
+                    th:selected="${hero.organizations.contains(organization)}"
+                  >
+                    Organization Name
+                  </option>
+                  <div th:if="${#fields.hasErrors('hero.organizations')}">
+                    <p
+                      th:each="error : ${#fields.errors('hero.organizations')}"
+                      class="alert alert-danger"
+                      th:text="${error}"
+                    >
+                      Bad name
+                    </p>
+                  </div>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="description" class="col-3 col-form-label">
+                Description
+              </label>
+              <div class="col-9">
+                <input
+                  type="text"
+                  name="description"
+                  id="description"
+                  class="form-control"
+                  th:value="${hero.description}"
+                />
+                <div th:if="${#fields.hasErrors('hero.description')}">
+                  <p
+                    th:each="error : ${#fields.errors('hero.description')}"
+                    class="alert alert-danger"
+                    th:text="${error}"
+                  >
+                    Bad name
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="imgUrl" class="col-3 col-form-label">
+                Image Url
+              </label>
+              <div class="col-9">
+                <input
+                  type="url"
+                  name="imgUrl"
+                  id="imgUrl"
+                  class="form-control"
+                  th:value="${hero.imgUrl}"
+                />
+                <div th:if="${#fields.hasErrors('hero.imgUrl')}">
+                  <p
+                    th:each="error : ${#fields.errors('hero.imgUrl')}"
+                    class="alert alert-danger"
+                    th:text="${error}"
+                  >
+                    Bad name
+                  </p>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="id" th:value="${hero.id}" />
+            <button type="submit" class="btn btn-primary">Edit Hero</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- End main body -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

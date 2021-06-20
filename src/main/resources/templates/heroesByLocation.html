@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <script src="https://use.fontawesome.com/77ab717e9d.js"></script>
+    <title>Superhero Sightings</title>
+  </head>
+
+  <body>
+    <!-- Main Body of Page -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/heroes"
+              >Hero <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/organizations">Organization</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/locations">Location</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/sightings">Sighting</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Search
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="/heroesByLocation"
+                >Hero(es) By Location</a
+              >
+              <a class="dropdown-item" href="/locationsByHero"
+                >Location(s) By Hero</a
+              >
+              <a class="dropdown-item" href="/sightingsByDate"
+                >Sighting(s) By Date</a
+              >
+              <a class="dropdown-item" href="/heroesByOrganization"
+                >Hero(es) By Organization</a
+              >
+              <a class="dropdown-item" href="/organizationsByHero"
+                >Organization(s) By Hero</a
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row m-4">
+        <div class="col text-center border border-dark">
+          <h1><a href="/" class="text-dark">Search Hero(es) By Location</a></h1>
+        </div>
+      </div>
+
+      <div class="row m-4 border border-dark">
+        <div class="col-3 text-center m-3">
+          <span class="h3">Search Hero(es)</span>
+        </div>
+        <div class="col-7 text-center m-3">
+          <form action="searchHeroesByLocation" method="POST">
+            <div class="form-group row">
+              <label for="name" class="col-3 col-form-label"> Location </label>
+              <div class="col-9">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                  placeholder="Type City"
+                />
+                <div th:if="${error}">
+                  <p class="alert alert-danger" th:text="${error}">empty</p>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search Heroes</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="row m-4 border border-dark">
+        <div class="col text-center m-3">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Hero Type</th>
+                <th>Super Power</th>
+                <th>Details</th>
+                <th>Edit</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="hero : ${heroes}">
+                <td th:text="${hero.id}">Hero ID</td>
+                <td th:text="${hero.name}">Hero Name</td>
+                <td th:text="${hero.heroType}">Hero Type</td>
+                <td th:text="${hero.superPower}">Super Power</td>
+                <td>
+                  <a href="#" th:href="@{/heroDetail(id=${hero.id})}"
+                    >Details</a
+                  >
+                </td>
+                <td>
+                  <a href="#" th:href="@{/editHero(id=${hero.id})}">Edit</a>
+                </td>
+                <td>
+                  <a href="#" th:href="@{/deleteHero(id=${hero.id})}">Delete</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- End main body -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
